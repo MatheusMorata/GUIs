@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <stdbool.h>
 
 // Constantes
 #define Titulo "ex-1.2.1"
@@ -6,6 +7,8 @@
 #define Altura 600
 
 int main(int argc, char* args[]){
+    int rodando = true;
+    SDL_Event e;
 
     SDL_Init(SDL_INIT_EVERYTHING); // Inicializando SDL
 
@@ -65,32 +68,40 @@ int main(int argc, char* args[]){
         {511, 500},
     };
 
-    // Definindo cor da tela
-    SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 255); 
-    SDL_RenderClear(renderizador);
+    while(rodando == true){
+        while(SDL_PollEvent( &e ) != 0){
+            if(e.type == SDL_QUIT){
+                rodando = false;
+            }
+            // Definindo cor da tela
+            SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 255); 
+            SDL_RenderClear(renderizador);
 
-    // Desenhando os quadrados
-    SDL_SetRenderDrawColor(renderizador, 255, 0, 0, 255);
-    SDL_RenderFillRect(renderizador, &quadradoVermelho);
+            // Desenhando os quadrados
+            SDL_SetRenderDrawColor(renderizador, 255, 0, 0, 255);
+            SDL_RenderFillRect(renderizador, &quadradoVermelho);
 
-    SDL_SetRenderDrawColor(renderizador, 0, 255, 0, 255);
-    SDL_RenderFillRect(renderizador, &quadradoVerde);
+            SDL_SetRenderDrawColor(renderizador, 0, 255, 0, 255);
+            SDL_RenderFillRect(renderizador, &quadradoVerde);
 
-    SDL_SetRenderDrawColor(renderizador, 135, 206, 255, 255);
-    SDL_RenderFillRect(renderizador, &quadradoAzul);
+            SDL_SetRenderDrawColor(renderizador, 135, 206, 255, 255);
+            SDL_RenderFillRect(renderizador, &quadradoAzul);
 
-    SDL_SetRenderDrawColor(renderizador, 255, 255, 0, 255);
-    SDL_RenderFillRect(renderizador, &quadradoAmarelo);
+            SDL_SetRenderDrawColor(renderizador, 255, 255, 0, 255);
+            SDL_RenderFillRect(renderizador, &quadradoAmarelo);
 
-    // Desenhando pontos
-    SDL_SetRenderDrawColor(renderizador, 255, 125, 125, 255); 
-    SDL_RenderDrawPoints(renderizador, pontos, 12);
+            // Desenhando pontos
+            SDL_SetRenderDrawColor(renderizador, 255, 125, 125, 255); 
+            SDL_RenderDrawPoints(renderizador, pontos, 12);
 
+            // Desenhando linha
+            SDL_SetRenderDrawColor(renderizador, 0, 255, 0, 255);
+            SDL_RenderDrawLine(renderizador, 50, 50, 750, 550);
 
-    // Desenhando linha
-    
-    SDL_RenderPresent(renderizador);
-    SDL_Delay(5000);
+            SDL_RenderPresent(renderizador);
+        }    
+
+    }
 
     return 0;
 }
