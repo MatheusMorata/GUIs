@@ -49,6 +49,22 @@ int main(int argc, char* args[]){
         150 
     };
 
+    // Múltiplos pontos
+    SDL_Point pontos[12] = {
+        {500, 500},
+        {501, 500},
+        {502, 500},
+        {503, 500},
+        {504, 500},
+        {505, 500},
+        {506, 500},
+        {507, 500},
+        {508, 500},
+        {5090, 500},
+        {510, 500},
+        {511, 500},
+    };
+
     // Definindo cor da tela
     SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 255); 
     SDL_RenderClear(renderizador);
@@ -66,6 +82,13 @@ int main(int argc, char* args[]){
     SDL_SetRenderDrawColor(renderizador, 255, 255, 0, 255);
     SDL_RenderFillRect(renderizador, &quadradoAmarelo);
 
+    // Desenhando pontos
+    SDL_SetRenderDrawColor(renderizador, 255, 125, 125, 255); 
+    SDL_RenderDrawPoints(renderizador, pontos, 12);
+
+
+    // Desenhando linha
+    
     SDL_RenderPresent(renderizador);
     SDL_Delay(5000);
 
