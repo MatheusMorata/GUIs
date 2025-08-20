@@ -40,6 +40,13 @@ int main(int argc, char* args[]){
         0, 0, 255, 255 // RGBA
     );
 
+    // Definindo pontos do retângulo
+    short pontox[4] = {300, 300, 500, 500};  
+    short pontoy[4] = {280, 300, 300, 280}; 
+
+    // Desenhando retângulo
+    filledPolygonRGBA(renderizador, pontox, pontoy, 4, 255, 255, 255, 255);
+
     // EXIBINDO
     SDL_RenderPresent(renderizador);
     SDL_Delay(2000);
