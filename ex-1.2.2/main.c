@@ -30,18 +30,18 @@ int main(int argc, char* args[]){
 
     // Desenhando losango
     filledPolygonRGBA(renderizador, pontosX, pontosY, 4, 255, 255, 0, 255);
-    SDL_RenderPresent(renderizador);
 
     // Desenhando círculo azul
     filledCircleRGBA(
         renderizador,
         400, // Posição x
-        400, // Posição y
+        300, // Posição y
         100, // Raio
         0, 0, 255, 255 // RGBA
     );
 
     // EXIBINDO
+    SDL_RenderPresent(renderizador);
     SDL_Delay(2000);
 
     return 0;
