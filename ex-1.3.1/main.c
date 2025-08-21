@@ -35,22 +35,21 @@ int main(int argc, char* args[]){
         // Colorindo fundo de branco    
         SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 255);
         SDL_RenderClear(renderizador);
-
+        
         // Desenhando o quadrado azul
         SDL_SetRenderDrawColor(renderizador, 0, 0, 255, 255);
         SDL_RenderFillRect(renderizador, &quadrado);
 
-        // EXIBINDO RESULTADO
-        SDL_RenderPresent(renderizador);
-        SDL_Delay(16);
-        
         // Animação
         quadrado.x = quadrado.x + velocidade;
         
-        if(quadrado.x > 600){
+        if(quadrado.x > 800 || quadrado.x < 0){
             velocidade = velocidade * -1;
         }
-
+        
+        // EXIBINDO RESULTADO
+        SDL_RenderPresent(renderizador);
+        SDL_Delay(16);
     }
     return 0;
 }
