@@ -3,6 +3,9 @@
 
 int main (int argc, char* args[])
 {
+    int mouseX, mouseY;
+    SDL_Rect r_lista[10];
+    int num_retangulos = 0;
 
     /* INICIALIZACAO */
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -41,6 +44,10 @@ int main (int argc, char* args[])
         SDL_RenderClear(ren);
         SDL_SetRenderDrawColor(ren, 0x00,0x00,0xFF,0x00);
         SDL_RenderFillRect(ren, &r);
+        for(int i = 0; i < num_retangulos; i++){
+            SDL_SetRenderDrawColor(ren, 0xFF,0xFF,0x00,0x00);
+            SDL_RenderFillRect(ren, &r_lista[i]);
+        }
         SDL_RenderPresent(ren);
         SDL_WaitEvent(&event);
         if (event.type == SDL_KEYDOWN) {
@@ -57,6 +64,15 @@ int main (int argc, char* args[])
                 case SDLK_RIGHT:
                     r.x += 5;
                     break;
+            }
+
+        // Adiciona novos quadrados ao clickar
+        }else if(event.type == SDL_MOUSEBUTTONDOWN){
+            SDL_GetMouseState(&mouseX, &mouseY);
+            if(num_retangulos < 10){
+                num_retangulos++;
+                SDL_Rect novo = {mouseX, mouseY, 10, 10};
+                r_lista[num_retangulos - 1] = novo;
             }
         }
         SDL_Delay(16);        
