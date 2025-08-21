@@ -4,7 +4,7 @@
 int main(int argc, char* args[]){
 
     bool acabou = false;
-    int direcao = 1;
+    int velocidade = 10;
 
     // Iniciando SDL
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -45,9 +45,12 @@ int main(int argc, char* args[]){
         SDL_Delay(16);
         
         // Animação
-        quadrado.x = (quadrado.x + 10) * direcao;
+        quadrado.x = quadrado.x + velocidade;
+        
+        if(quadrado.x > 600){
+            velocidade = velocidade * -1;
+        }
 
     }
-
     return 0;
 }
