@@ -3,7 +3,7 @@
 
 int main(int argc, char* args[]){
 
-    bool acabou = false;
+    bool rodando = true;
     int velocidade = 10;
 
     // Iniciando SDL
@@ -31,7 +31,7 @@ int main(int argc, char* args[]){
     };
 
     // Looping principal
-    while(acabou == false){
+    while(rodando){
         // Colorindo fundo de branco    
         SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 255);
         SDL_RenderClear(renderizador);
@@ -46,7 +46,7 @@ int main(int argc, char* args[]){
         if(quadrado.x > 800 || quadrado.x < 0){
             velocidade = velocidade * -1;
         }
-        
+
         // EXIBINDO RESULTADO
         SDL_RenderPresent(renderizador);
         SDL_Delay(16);
