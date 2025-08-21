@@ -13,6 +13,7 @@ int main(int argc, char* args[]){
         SDL_WINDOW_SHOWN
     );
 
-    SDL_Delay(1000);
+    SDL_Renderer *renderizador = SDL_CreateRenderer(janela, -1, 0);
+
     return 0;
 }
