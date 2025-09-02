@@ -23,14 +23,26 @@ int main(int argc, char* args[]){
 
         SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
         SDL_RenderClear(renderizador);
+        SDL_SetRenderDrawColor(renderizador, 0, 0, 255, 0);
+        SDL_RenderFillRect(renderizador, &segundo_quadrado);
+        SDL_RenderPresent(renderizador);
 
         SDL_WaitEvent(&evt);
         
         if(evt.type == SDL_QUIT){
             rodando = false;
+        }else if(evt.type = SDL_KEYDOWN){
+            switch(evt.key.keysym.sym){
+                case SDLK_w:
+                    segundo_quadrado.y -= 10;
+                case SDLK_s:
+                    segundo_quadrado.y += 10;
+                //case SDLK_a:
+                //    segundo_quadrado.x -= 10;
+                //case SDLK_d:
+                //    segundo_quadrado.x += 10;
+            }   
         }
-
-        SDL_RenderPresent(renderizador);
         SDL_Delay(16);
     }
     return 0;
