@@ -34,13 +34,17 @@ int main(int argc, char* args[]){
         }else if(evt.type = SDL_KEYDOWN){
             switch(evt.key.keysym.sym){
                 case SDLK_w:
-                    segundo_quadrado.y -= 10;
+                    segundo_quadrado.y -= 5;
+                    break;
                 case SDLK_s:
-                    segundo_quadrado.y += 10;
-                //case SDLK_a:
-                //    segundo_quadrado.x -= 10;
-                //case SDLK_d:
-                //    segundo_quadrado.x += 10;
+                    segundo_quadrado.y += 5;
+                    break;
+                case SDLK_a:
+                    segundo_quadrado.x -= 10;
+                    break;
+                case SDLK_d:
+                    segundo_quadrado.x += 10;
+                    break;
             }   
         }
         SDL_Delay(16);
