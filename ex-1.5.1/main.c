@@ -8,6 +8,7 @@ int main(int argc, char* args[]){
     bool rodando = true;
     SDL_Event evt;
     int aleatorio = 0;
+    int x,y;
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -52,6 +53,11 @@ int main(int argc, char* args[]){
             primeiro_quadrado.x += 5;
         }
 
+        // Quadrado que segue o mouse
+        SDL_GetMouseState(&x, &y);
+        terceiro_quadrado.x = x;
+        terceiro_quadrado.y = y;
+
         // Eventos de fechar janela, teclado e mouse
         SDL_WaitEvent(&evt);
         if(evt.type == SDL_QUIT){
@@ -72,6 +78,7 @@ int main(int argc, char* args[]){
                     break;
             }   
         }
+
         SDL_RenderPresent(renderizador);
         SDL_Delay(16);
     }
