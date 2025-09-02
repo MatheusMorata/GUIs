@@ -49,7 +49,7 @@ int main(int argc, char* args[]){
 
         // EXIBINDO RESULTADO
         SDL_RenderPresent(renderizador);
-        SDL_Delay(16);
+        SDL_Delay(1000);
     }
     return 0;
 }
