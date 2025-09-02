@@ -1,9 +1,13 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 int main(int argc, char* args[]){
+    
+    // Variáveis
     bool rodando = true;
     SDL_Event evt;
+    int aleatorio = 0;
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -19,11 +23,12 @@ int main(int argc, char* args[]){
     
     // Quadrados requisitados no exercício
     SDL_Rect primeiro_quadrado = {400, 300, 20, 20};
-    SDL_Rect segundo_quadrado = {400, 300, 10, 10};
+    SDL_Rect segundo_quadrado = {400, 300, 20, 20};
     SDL_Rect terceiro_quadrado = {0, 0, 20, 20};
 
     while(rodando == true){
 
+        // Colorindo fundo
         SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
         SDL_RenderClear(renderizador);
 
@@ -35,6 +40,17 @@ int main(int argc, char* args[]){
         SDL_SetRenderDrawColor(renderizador, 0, 0, 255, 0);
         SDL_RenderFillRect(renderizador, &terceiro_quadrado);
 
+        // Quadrado move-se pelo tempo
+        aleatorio = rand() % 4; 
+        if(aleatorio == 0){   
+            primeiro_quadrado.y -= 5;
+        }else if(aleatorio == 1){
+            primeiro_quadrado.y += 5;
+        }else if(aleatorio == 2){
+            primeiro_quadrado.x -= 5;
+        }else{
+            primeiro_quadrado.x += 5;
+        }
 
         // Eventos de fechar janela, teclado e mouse
         SDL_WaitEvent(&evt);
