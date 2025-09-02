@@ -7,6 +7,7 @@ int main(int argc, char* args[]){
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
+    // Elementos essenciais (janela e renderizador)
     SDL_Window *janela = SDL_CreateWindow(
         "Exercicio 1.5.1",
         SDL_WINDOWPOS_CENTERED,
@@ -14,21 +15,29 @@ int main(int argc, char* args[]){
         800,600,
         SDL_WINDOW_SHOWN
     );
-
     SDL_Renderer *renderizador = SDL_CreateRenderer(janela, -1, 0);
     
-    SDL_Rect segundo_quadrado = {40, 40, 10, 10};
+    // Quadrados requisitados no exercício
+    SDL_Rect primeiro_quadrado = {400, 300, 20, 20};
+    SDL_Rect segundo_quadrado = {400, 300, 10, 10};
+    SDL_Rect terceiro_quadrado = {0, 0, 20, 20};
 
     while(rodando == true){
 
         SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
         SDL_RenderClear(renderizador);
-        SDL_SetRenderDrawColor(renderizador, 0, 0, 255, 0);
-        SDL_RenderFillRect(renderizador, &segundo_quadrado);
-        SDL_RenderPresent(renderizador);
 
+        // Desenhando os quadrados
+        SDL_SetRenderDrawColor(renderizador, 255, 0, 0, 0);
+        SDL_RenderFillRect(renderizador, &primeiro_quadrado);
+        SDL_SetRenderDrawColor(renderizador, 0, 255, 0, 0);
+        SDL_RenderFillRect(renderizador, &segundo_quadrado);
+        SDL_SetRenderDrawColor(renderizador, 0, 0, 255, 0);
+        SDL_RenderFillRect(renderizador, &terceiro_quadrado);
+
+
+        // Eventos de fechar janela, teclado e mouse
         SDL_WaitEvent(&evt);
-        
         if(evt.type == SDL_QUIT){
             rodando = false;
         }else if(evt.type = SDL_KEYDOWN){
@@ -40,13 +49,14 @@ int main(int argc, char* args[]){
                     segundo_quadrado.y += 5;
                     break;
                 case SDLK_a:
-                    segundo_quadrado.x -= 10;
+                    segundo_quadrado.x -= 5;
                     break;
                 case SDLK_d:
-                    segundo_quadrado.x += 10;
+                    segundo_quadrado.x += 5;
                     break;
             }   
         }
+        SDL_RenderPresent(renderizador);
         SDL_Delay(16);
     }
     return 0;
