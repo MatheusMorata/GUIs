@@ -59,7 +59,7 @@ int main(int argc, char* args[]){
         terceiro_quadrado.y = y;
 
         // Eventos de fechar janela, teclado e mouse
-        SDL_WaitEvent(&evt);
+        SDL_WaitEventTimeout(&evt, 100);
         if(evt.type == SDL_QUIT){
             rodando = false;
         }else if(evt.type = SDL_KEYDOWN){
@@ -80,7 +80,6 @@ int main(int argc, char* args[]){
         }
 
         SDL_RenderPresent(renderizador);
-        SDL_Delay(16);
     }
     return 0;
 }
