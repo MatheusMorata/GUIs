@@ -29,13 +29,13 @@ int main(int argc, char* args[]){
     // Variáveis
     bool rodando = true;
     SDL_Event evento;
-    int timeout = 1;
+    int timeout;
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
     // Elementos essenciais (janela e renderizador)
     SDL_Window *janela = SDL_CreateWindow(
-        "Exercicio 1.5.1",
+        "Exercicio 1.6",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         800,600,
@@ -52,7 +52,9 @@ int main(int argc, char* args[]){
     int linha_chegada_x = 780;
 
     while(rodando){
-        
+
+        timeout = 16;
+
         // Fundo
         SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
         SDL_RenderClear(renderizador);
@@ -73,12 +75,21 @@ int main(int argc, char* args[]){
         SDL_RenderPresent(renderizador);
 
         // Eventos
-        while(SDL_PollEvent(&evento)){
+        while(AUX_WaitEventTimeoutCount(&evento, &timeout)){
+            
             if(evento.type == SDL_QUIT){
                 rodando = false;
             }
+
+            // Mover quadrado pelo teclado apenas em x 
+            if(evento.type == SDL_KEYDOWN){
+                if(evento.key.keysym.sym == SDLK_d){
+                    segundo_quadrado.x += 10;
+                }else if(evento.key.keysym.sym == SDLK_a){
+                    segundo_quadrado.x -= 10;
+                }
+            }
         }
-        SDL_Delay(16); 
     }
     
     // Liberando recursos
