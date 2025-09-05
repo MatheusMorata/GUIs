@@ -14,8 +14,12 @@ int main(int args, char* argc[]){
 
     SDL_Renderer *renderizador = SDL_CreateRenderer(janela, -1, 0);
 
+    SDL_Rect quadrado = {300, 300, 50, 50};
+
     SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
     SDL_RenderClear(renderizador);
+    SDL_SetRenderDrawColor(renderizador, 0, 0, 255, 0);
+    SDL_RenderFillRect(renderizador, &quadrado);
     SDL_RenderPresent(renderizador);
     SDL_Delay(500);
     return 0;   
