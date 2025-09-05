@@ -1,6 +1,8 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 
+
+    
 int AUX_WaitEventTimeoutCount(SDL_Event *evt, Uint32 *ms) {
     if (ms == NULL || *ms == 0) {
         // Se não há tempo restante, retorna imediatamente
@@ -23,13 +25,7 @@ int AUX_WaitEventTimeoutCount(SDL_Event *evt, Uint32 *ms) {
 
     return result;
 }
-/*
-void encerrar_exercicio(bool chegou[3]){
-    
-    for(i ){
 
-    }    
-}*/
 
 int main(int argc, char* args[]){
 
@@ -38,7 +34,6 @@ int main(int argc, char* args[]){
     bool chegou[3] = {false, false, false};
     SDL_Event evento;
     int timeout;
-    
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -63,7 +58,11 @@ int main(int argc, char* args[]){
     while(rodando){
 
         timeout = 16;
-    
+
+        if(chegou[0] == true && chegou[1] == true && chegou[2] == true){
+            rodando = false;
+        }
+
         // Fundo
         SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
         SDL_RenderClear(renderizador);
@@ -86,10 +85,6 @@ int main(int argc, char* args[]){
         // Eventos
         while(AUX_WaitEventTimeoutCount(&evento, &timeout)){
 
-            if(){
-
-            }
-            
             // Verifica os quadrados que cruzaram a linha de chegada
             if(primeiro_quadrado.x > 780){
                 chegou[0] = true;
