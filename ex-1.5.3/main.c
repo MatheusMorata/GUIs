@@ -27,9 +27,9 @@ int AUX_WaitEventTimeoutCount(SDL_Event *evt, Uint32 *ms) {
 int main(int args, char* argc[]){
 
     // Variáveis
-    bool rodando = true;
     SDL_Event evento;
-    Uint32 timeout = 500;
+    Uint32 timeout = 5000;
+    bool rodando = true;
 
     // Inicializando SDL2
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -48,19 +48,26 @@ int main(int args, char* argc[]){
     SDL_Rect quadrado = {300, 300, 50, 50};
 
     // Looping principal
-    while(rodando){
+    while(rodando && timeout > 0){ 
 
+        if(AUX_WaitEventTimeoutCount(&evento, &timeout)){
+            if(evento.type == SDL_QUIT){
+                rodando = false;
+            }else if(evento.type == SDL_MOUSEBUTTONDOWN){
+                if(evento.button.button == SDL_BUTTON_LEFT){
+                    quadrado.x -= 10;
+                }else if(evento.button.button == SDL_BUTTON_RIGHT){
+                    quadrado.x += 10;
+                }
+            }
+        }
+
+        // Desenhando 
         SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
         SDL_RenderClear(renderizador);
         SDL_SetRenderDrawColor(renderizador, 0, 0, 255, 0);
         SDL_RenderFillRect(renderizador, &quadrado);
         SDL_RenderPresent(renderizador);
-
-        if(AUX_WaitEventTimeoutCount(&evento, &timeout)){
-            if(){
-
-            }
-        }
 
     }
 
