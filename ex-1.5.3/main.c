@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 int AUX_WaitEventTimeoutCount(SDL_Event *evt, Uint32 *ms) {
     if (ms == NULL || *ms == 0) {
@@ -30,6 +31,10 @@ int main(int args, char* argc[]){
     SDL_Event evento;
     Uint32 timeout = 5000;
     bool rodando = true;
+    int fundo = 255;
+    int R = 0;
+    int G = 0;
+    int B = 255;
 
     // Inicializando SDL2
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -52,20 +57,25 @@ int main(int args, char* argc[]){
 
         if(AUX_WaitEventTimeoutCount(&evento, &timeout)){
             if(evento.type == SDL_QUIT){
-                rodando = false;
+                rodando = false; 
             }else if(evento.type == SDL_MOUSEBUTTONDOWN){
-                if(evento.button.button == SDL_BUTTON_LEFT){
-                    quadrado.x -= 10; // Move-se para esquerda com click no botão esquerdo do mouse 
-                }else if(evento.button.button == SDL_BUTTON_RIGHT){
-                    quadrado.x += 10; // Move-se para direita com click no botão direito do mouse
+                if(evento.button.button == SDL_BUTTON_RIGHT){
+                    quadrado.x += 10;
+                }
+            }else if(evento.type == SDL_KEYDOWN){
+                // Novo comportamento muda de cor, quando pressiona a tecla C
+                if(evento.key.keysym.sym == SDLK_c){
+                    R = rand() % 255;
+                    G = rand() % 255;
+                    B = rand() % 255;
                 }
             }
         }
 
         // Desenhando 
-        SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
+        SDL_SetRenderDrawColor(renderizador, fundo, fundo, fundo, 0);
         SDL_RenderClear(renderizador);
-        SDL_SetRenderDrawColor(renderizador, 0, 0, 255, 0);
+        SDL_SetRenderDrawColor(renderizador, R, G, B, 0);
         SDL_RenderFillRect(renderizador, &quadrado);
         SDL_RenderPresent(renderizador);
 
