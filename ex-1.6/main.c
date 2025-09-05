@@ -24,12 +24,12 @@ int AUX_WaitEventTimeoutCount(SDL_Event *evt, Uint32 *ms) {
     return result;
 }
 
-
 int main(int argc, char* args[]){
 
     // Variáveis
     bool rodando = true;
     SDL_Event evento;
+    int timeout = 1;
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -66,17 +66,21 @@ int main(int argc, char* args[]){
         SDL_RenderFillRect(renderizador, &terceiro_quadrado);
 
         // Linha de chegada
-        SDL_SetRenderDrawColor(renderizador, 0, 0, 0, 0); 
+        SDL_SetRenderDrawColor(renderizador, 0, 0, 0, 0);
         SDL_RenderDrawLine(renderizador, linha_chegada_x, 0, linha_chegada_x, 600);
 
         // Apresenta
         SDL_RenderPresent(renderizador);
 
         // Eventos
-
-        
+        while(SDL_PollEvent(&evento)){
+            if(evento.type == SDL_QUIT){
+                rodando = false;
+            }
+        }
+        SDL_Delay(16); 
     }
-
+    
     // Liberando recursos
     SDL_DestroyRenderer(renderizador);
     SDL_DestroyWindow(janela);
