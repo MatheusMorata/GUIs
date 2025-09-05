@@ -29,12 +29,14 @@ int main(int args, char* argc[]){
 
     // Variáveis
     SDL_Event evento;
-    Uint32 timeout = 5000;
+    Uint32 timeout = 1; // pequeno timeout para não travar o loop
     bool rodando = true;
+    bool andando = false;
     int fundo = 255;
     int R = 0;
     int G = 0;
     int B = 255;
+    int direcao = 1;
 
     // Inicializando SDL2
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -53,14 +55,17 @@ int main(int args, char* argc[]){
     SDL_Rect quadrado = {300, 300, 50, 50};
 
     // Looping principal
-    while(rodando && timeout > 0){ 
+    while(rodando){ 
 
-        if(AUX_WaitEventTimeoutCount(&evento, &timeout)){
+        // Captura eventos, mas com timeout mínimo para não travar
+        while(AUX_WaitEventTimeoutCount(&evento, &timeout)){
             if(evento.type == SDL_QUIT){
                 rodando = false; 
             }else if(evento.type == SDL_MOUSEBUTTONDOWN){
                 if(evento.button.button == SDL_BUTTON_RIGHT){
-                    quadrado.x += 10;
+                    andando = true;
+                }else if(evento.button.button == SDL_BUTTON_LEFT){
+                    andando = false;
                 }
             }else if(evento.type == SDL_KEYDOWN){
                 // Novo comportamento muda de cor, quando pressiona a tecla C
@@ -72,6 +77,14 @@ int main(int args, char* argc[]){
             }
         }
 
+        // Atualiza posição do quadrado continuamente se andando for true
+        if(andando){
+            if(quadrado.x + quadrado.w > 800 || quadrado.x < 0){
+                direcao *= -1;
+            }
+            quadrado.x += 5 * direcao; // movimento contínuo
+        }
+
         // Desenhando 
         SDL_SetRenderDrawColor(renderizador, fundo, fundo, fundo, 0);
         SDL_RenderClear(renderizador);
@@ -79,6 +92,8 @@ int main(int args, char* argc[]){
         SDL_RenderFillRect(renderizador, &quadrado);
         SDL_RenderPresent(renderizador);
 
+        SDL_Delay(16); // ~60 FPS
+        timeout = 1;    // reset timeout para captura de eventos
     }
 
     // Liberando recursos
