@@ -80,7 +80,7 @@ int main(int argc, char* args[]){
             if(evento.type == SDL_QUIT){
                 rodando = false;
             }
-
+            
             // Mover quadrado pelo teclado apenas em x 
             if(evento.type == SDL_KEYDOWN){
                 if(evento.key.keysym.sym == SDLK_d){
@@ -89,7 +89,16 @@ int main(int argc, char* args[]){
                     segundo_quadrado.x -= 10;
                 }
             }
+
+            // Mover quadrado pelo mouse apenas em x
+            if(evento.type == SDL_MOUSEMOTION){
+                terceiro_quadrado.x = evento.motion.x;
+            }
         }
+
+        // Movendo pelo tempo apenas em x
+        primeiro_quadrado.x += 2;
+        
     }
     
     // Liberando recursos
