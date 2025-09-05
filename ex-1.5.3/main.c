@@ -15,7 +15,6 @@ int AUX_WaitEventTimeoutCount(SDL_Event *evt, Uint32 *ms) {
     Uint32 end = SDL_GetTicks();    // tempo final
     Uint32 elapsed = end - start;   // tempo decorrido
 
-    // Evita underflow caso elapsed > *ms
     if (elapsed >= *ms) {
         *ms = 0;
     } else {
@@ -24,6 +23,7 @@ int AUX_WaitEventTimeoutCount(SDL_Event *evt, Uint32 *ms) {
 
     return result;
 }
+
 int main(int args, char* argc[]){
 
     // Variáveis
