@@ -55,9 +55,9 @@ int main(int args, char* argc[]){
                 rodando = false;
             }else if(evento.type == SDL_MOUSEBUTTONDOWN){
                 if(evento.button.button == SDL_BUTTON_LEFT){
-                    quadrado.x -= 10;
+                    quadrado.x -= 10; // Move-se para esquerda com click no botão esquerdo do mouse 
                 }else if(evento.button.button == SDL_BUTTON_RIGHT){
-                    quadrado.x += 10;
+                    quadrado.x += 10; // Move-se para direita com click no botão direito do mouse
                 }
             }
         }
