@@ -34,6 +34,7 @@ int main(int argc, char* args[]){
     bool chegou[3] = {false, false, false};
     SDL_Event evento;
     int timeout;
+    int vencedor = -1;
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -106,26 +107,40 @@ int main(int argc, char* args[]){
             primeiro_quadrado.x += 2;
             if(primeiro_quadrado.x >= linha_chegada_x){
                 chegou[0] = true;
-                SDL_Log("Quadrado 1 chegou!");
+                if(vencedor == -1){
+                    vencedor = 1;
+                }
             }
         }
 
         // Quadrado teclado
         if(segundo_quadrado.x >= linha_chegada_x && !chegou[1]){
             chegou[1] = true;
-            SDL_Log("Quadrado 2 chegou!");
+            if(vencedor == -1){
+                vencedor = 2;
+            }
         }
 
         // Quadrado mouse
         if(terceiro_quadrado.x >= linha_chegada_x && !chegou[2]){
             chegou[2] = true;
-            SDL_Log("Quadrado 3 chegou!");
+            if(vencedor == -1){
+                vencedor = 3;
+            }
         }
 
         if(chegou[0] == true && chegou[1] == true && chegou[2] == true){
             rodando = false;
         }
 
+    }
+
+    if(vencedor == 1){
+        SDL_Log("O vencedor foi o quadrado que move-se pelo tempo");
+    }else if(vencedor == 2){
+        SDL_Log("O vencedor foi o quadrado que move-se pelo teclado");
+    }else{
+        SDL_Log("O vencedor foi o quadrado que move-se pelo mouse");
     }
     
     // Liberando recursos
