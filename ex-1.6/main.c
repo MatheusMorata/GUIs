@@ -59,10 +59,6 @@ int main(int argc, char* args[]){
 
         timeout = 16;
 
-        if(chegou[0] == true && chegou[1] == true && chegou[2] == true){
-            rodando = false;
-        }
-
         // Fundo
         SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
         SDL_RenderClear(renderizador);
@@ -85,19 +81,6 @@ int main(int argc, char* args[]){
         // Eventos
         while(AUX_WaitEventTimeoutCount(&evento, &timeout)){
 
-            // Verifica os quadrados que cruzaram a linha de chegada
-            if(primeiro_quadrado.x > 780){
-                chegou[0] = true;
-            }
-
-            if(segundo_quadrado.x > 780){
-                chegou[1] = true;
-            }
-
-            if(terceiro_quadrado.x > 780){
-                chegou[2] = true;
-            }
-
             if(evento.type == SDL_QUIT){
                 rodando = false;
             }
@@ -117,10 +100,32 @@ int main(int argc, char* args[]){
             }
         }
 
-        // Movendo pelo tempo 
-        if(chegou[0] == false){
+
+        // Movendo pelo tempo
+        if(!chegou[0]){
             primeiro_quadrado.x += 2;
+            if(primeiro_quadrado.x >= linha_chegada_x){
+                chegou[0] = true;
+                SDL_Log("Quadrado 1 chegou!");
+            }
         }
+
+        // Quadrado teclado
+        if(segundo_quadrado.x >= linha_chegada_x && !chegou[1]){
+            chegou[1] = true;
+            SDL_Log("Quadrado 2 chegou!");
+        }
+
+        // Quadrado mouse
+        if(terceiro_quadrado.x >= linha_chegada_x && !chegou[2]){
+            chegou[2] = true;
+            SDL_Log("Quadrado 3 chegou!");
+        }
+
+        if(chegou[0] == true && chegou[1] == true && chegou[2] == true){
+            rodando = false;
+        }
+
     }
     
     // Liberando recursos
