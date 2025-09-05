@@ -23,13 +23,22 @@ int AUX_WaitEventTimeoutCount(SDL_Event *evt, Uint32 *ms) {
 
     return result;
 }
+/*
+void encerrar_exercicio(bool chegou[3]){
+    
+    for(i ){
+
+    }    
+}*/
 
 int main(int argc, char* args[]){
 
     // Variáveis
     bool rodando = true;
+    bool chegou[3] = {false, false, false};
     SDL_Event evento;
     int timeout;
+    
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -54,7 +63,7 @@ int main(int argc, char* args[]){
     while(rodando){
 
         timeout = 16;
-
+    
         // Fundo
         SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
         SDL_RenderClear(renderizador);
@@ -76,29 +85,47 @@ int main(int argc, char* args[]){
 
         // Eventos
         while(AUX_WaitEventTimeoutCount(&evento, &timeout)){
+
+            if(){
+
+            }
             
+            // Verifica os quadrados que cruzaram a linha de chegada
+            if(primeiro_quadrado.x > 780){
+                chegou[0] = true;
+            }
+
+            if(segundo_quadrado.x > 780){
+                chegou[1] = true;
+            }
+
+            if(terceiro_quadrado.x > 780){
+                chegou[2] = true;
+            }
+
             if(evento.type == SDL_QUIT){
                 rodando = false;
             }
             
-            // Mover quadrado pelo teclado apenas em x 
+            // Movendo pelo teclado 
             if(evento.type == SDL_KEYDOWN){
-                if(evento.key.keysym.sym == SDLK_d){
+                if(evento.key.keysym.sym == SDLK_d && chegou[1] == false){
                     segundo_quadrado.x += 10;
-                }else if(evento.key.keysym.sym == SDLK_a){
+                }else if(evento.key.keysym.sym == SDLK_a && chegou[1] == false){
                     segundo_quadrado.x -= 10;
                 }
             }
 
-            // Mover quadrado pelo mouse apenas em x
-            if(evento.type == SDL_MOUSEMOTION){
+            // Movendo pelo mouse 
+            if(evento.type == SDL_MOUSEMOTION && chegou[2] == false){
                 terceiro_quadrado.x = evento.motion.x;
             }
         }
 
-        // Movendo pelo tempo apenas em x
-        primeiro_quadrado.x += 2;
-        
+        // Movendo pelo tempo 
+        if(chegou[0] == false){
+            primeiro_quadrado.x += 2;
+        }
     }
     
     // Liberando recursos
