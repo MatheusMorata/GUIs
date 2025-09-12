@@ -28,7 +28,7 @@ int main(int args, char* argc[]){
 
     // Variáveis
     SDL_Event evento;
-    Uint32 timeout = 1; // pequeno timeout para não travar o loop
+    Uint32 timeout = 16;
     bool rodando = true;
     bool andando = false;
     int fundo = 255;
@@ -56,7 +56,8 @@ int main(int args, char* argc[]){
     // Looping principal
     while(rodando){ 
 
-        // Captura eventos, mas com timeout mínimo para não travar
+        // Captura eventos, espera até 16ms (sem SDL_Delay)
+        timeout = 16;
         while(AUX_WaitEventTimeout(&evento, &timeout)){
             if(evento.type == SDL_QUIT){
                 rodando = false; 
@@ -90,9 +91,6 @@ int main(int args, char* argc[]){
         SDL_SetRenderDrawColor(renderizador, R, G, B, 0);
         SDL_RenderFillRect(renderizador, &quadrado);
         SDL_RenderPresent(renderizador);
-
-        SDL_Delay(16); // ~60 FPS
-        timeout = 1;    // reset timeout para captura de eventos
     }
 
     // Liberando recursos
