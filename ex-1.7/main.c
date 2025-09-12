@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <stdbool.h>
 
 int AUX_WaitEventTimeout(SDL_Event *evt, Uint32 *ms) {
     if (ms == NULL) {
@@ -23,6 +24,10 @@ int AUX_WaitEventTimeout(SDL_Event *evt, Uint32 *ms) {
 
 int main(int args, char* argc[]){
 
+    bool rodando = true;
+    int timeout = 16;
+    SDL_Event evento;
+
     // Iniciando elementos essenciais do SDL
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -36,12 +41,20 @@ int main(int args, char* argc[]){
     
     SDL_Renderer *renderizador = SDL_CreateRenderer(janela, -1, 0);
 
-    // Desenhando
-    SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
-    SDL_RenderClear(renderizador);
-    SDL_RenderPresent(renderizador);
+    while(rodando){
 
+        
 
-
+        // Desenhando
+        SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
+        SDL_RenderClear(renderizador);
+        SDL_RenderPresent(renderizador);
+        
+        while(AUX_WaitEventTimeout(&evento, &timeout)){
+            if(evento.type == SDL_QUIT){
+                rodando = false;
+            }
+        }
+    }
     return 0;
 }
