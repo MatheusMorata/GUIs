@@ -1,19 +1,14 @@
-#include <SDL2/SDL.h>
-#include <stdio.h>
-
-int AUX_WaitEventTimeoutCount(SDL_Event *evt, Uint32 *ms) {
-    if (ms == NULL || *ms == 0) {
-        // Se não há tempo restante, retorna imediatamente
-        return 0;
+int AUX_WaitEventTimeout(SDL_Event *evt, Uint32 *ms) {
+    if (ms == NULL) {
+        return 0; // segurança
     }
 
-    Uint32 start = SDL_GetTicks();  // tempo inicial
+    Uint32 start = SDL_GetTicks(); // tempo inicial
 
-    // Chama a função original com o tempo restante
-    int result = SDL_WaitEventTimeout(evt, *ms);
+    int result = SDL_WaitEventTimeout(evt, *ms); // 1 = evento, 0 = timeout
 
-    Uint32 end = SDL_GetTicks();    // tempo final
-    Uint32 elapsed = end - start;   // tempo decorrido
+    Uint32 end = SDL_GetTicks(); // tempo final
+    Uint32 elapsed = end - start; // tempo decorrido
 
     if (elapsed >= *ms) {
         *ms = 0;
@@ -21,5 +16,5 @@ int AUX_WaitEventTimeoutCount(SDL_Event *evt, Uint32 *ms) {
         *ms -= elapsed;
     }
 
-    return result;
+    return result; 
 }
