@@ -52,7 +52,7 @@ int main(int args, char* argc[]){
         // Desenhando
         SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
         SDL_RenderClear(renderizador);
-        SDL_RenderCopy(renderizador, persona, NULL, &renderizador, &quadrado);
+        SDL_RenderCopy(renderizador, persona, NULL, &quadrado);
         SDL_RenderPresent(renderizador);
         
         while(AUX_WaitEventTimeout(&evento, &timeout)){
