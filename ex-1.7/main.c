@@ -43,8 +43,6 @@ int main(int args, char* argc[]){
 
     while(rodando){
 
-        
-
         // Desenhando
         SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
         SDL_RenderClear(renderizador);
@@ -56,5 +54,10 @@ int main(int args, char* argc[]){
             }
         }
     }
+
+    // Liberando recursos
+    SDL_DestroyRenderer(renderizador);
+    SDL_DestroyWindow(janela);
+    SDL_Quit();
     return 0;
 }
