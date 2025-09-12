@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <stdbool.h>
 
 int AUX_WaitEventTimeout(SDL_Event *evt, Uint32 *ms) {
@@ -30,8 +31,9 @@ int main(int args, char* argc[]){
 
     // Iniciando elementos essenciais do SDL
     SDL_Init(SDL_INIT_EVERYTHING);
+    IMG_Init(0);
 
-    SDL_Window *janela = SDL_CreateWindow(
+    SDL_Window* janela = SDL_CreateWindow(
         "Exercicio-1.7",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
@@ -39,13 +41,18 @@ int main(int args, char* argc[]){
         SDL_WINDOW_SHOWN
     );
     
-    SDL_Renderer *renderizador = SDL_CreateRenderer(janela, -1, 0);
+    SDL_Renderer* renderizador = SDL_CreateRenderer(janela, -1, 0);
+
+    SDL_Texture* persona = IMG_LoadTexture(renderizador, "img/persona.png");
+
+    SDL_Rect quadrado = {50, 50, 300, 300};
 
     while(rodando){
 
         // Desenhando
         SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
         SDL_RenderClear(renderizador);
+        SDL_RenderCopy(renderizador, persona, NULL, &renderizador, &quadrado);
         SDL_RenderPresent(renderizador);
         
         while(AUX_WaitEventTimeout(&evento, &timeout)){
@@ -56,6 +63,7 @@ int main(int args, char* argc[]){
     }
 
     // Liberando recursos
+    SDL_DestroyTexture(persona);
     SDL_DestroyRenderer(renderizador);
     SDL_DestroyWindow(janela);
     SDL_Quit();
