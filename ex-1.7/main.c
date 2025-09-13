@@ -4,6 +4,7 @@
 
 #define NUM_FRAMES 9
 #define FRAME_DELAY 100 // ms por frame
+#define SPEED 5
 
 int AUX_WaitEventTimeout(SDL_Event *evt, Uint32 *ms) {
     if (ms == NULL) {
@@ -58,6 +59,7 @@ int main(int args, char* argc[]) {
 
     int frameAtual = 0;
     Uint32 ultimoTempo = SDL_GetTicks();
+    int direcao = 1; // 1 = direita, -1 = esquerda
 
     while (rodando) {
         // Eventos
@@ -72,7 +74,18 @@ int main(int args, char* argc[]) {
         if (agora - ultimoTempo >= FRAME_DELAY) {
             frameAtual = (frameAtual + 1) % NUM_FRAMES;
             ultimoTempo = agora;
-            quadrado.x += 10;
+
+            // Movimento com troca de direção
+            quadrado.x += direcao * SPEED;
+
+            // Bateu na borda direita
+            if (quadrado.x + quadrado.w >= 800) {
+                direcao = -1;
+            }
+            // Bateu na borda esquerda
+            else if (quadrado.x <= 0) {
+                direcao = 1;
+            }
         }
 
         // Desenhar
