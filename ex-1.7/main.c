@@ -42,7 +42,7 @@ int main(int args, char* argc[]) {
     
     SDL_Renderer* renderizador = SDL_CreateRenderer(janela, -1, SDL_RENDERER_ACCELERATED);
 
-    // Carregar as 9 imagens
+    // Carrega as imagens
     SDL_Texture* frames[NUM_FRAMES];
     for (int i = 0; i < NUM_FRAMES; i++) {
         char filename[64];
@@ -54,7 +54,7 @@ int main(int args, char* argc[]) {
         }
     }
 
-    SDL_Rect quadrado = {50, 50, 300, 300};
+    SDL_Rect quadrado = {0, 300, 100, 100};
 
     int frameAtual = 0;
     Uint32 ultimoTempo = SDL_GetTicks();
@@ -72,6 +72,7 @@ int main(int args, char* argc[]) {
         if (agora - ultimoTempo >= FRAME_DELAY) {
             frameAtual = (frameAtual + 1) % NUM_FRAMES;
             ultimoTempo = agora;
+            quadrado.x += 10;
         }
 
         // Desenhar
