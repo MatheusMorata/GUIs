@@ -3,7 +3,7 @@
 #include <stdbool.h>
 
 #define NUM_FRAMES 9
-#define FRAME_DELAY 100 // ms por frame
+#define FRAME_DELAY 100 
 #define SPEED 5
 
 int AUX_WaitEventTimeout(SDL_Event *evt, Uint32 *ms) {
@@ -34,7 +34,7 @@ int main(int args, char* argc[]) {
     IMG_Init(IMG_INIT_PNG);
 
     SDL_Window* janela = SDL_CreateWindow(
-        "Animacao Sprite",
+        "Exercicio - 1.7",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         800, 600,
@@ -57,9 +57,9 @@ int main(int args, char* argc[]) {
 
     SDL_Rect quadrado = {0, 300, 100, 100};
 
-    int frameAtual = 0;
+    int frameAtual = 0;         
     Uint32 ultimoTempo = SDL_GetTicks();
-    int direcao = 1; // 1 = direita, -1 = esquerda
+    int direcao = 1;            // 1 = direita, -1 = esquerda
 
     while (rodando) {
         // Eventos
@@ -72,8 +72,14 @@ int main(int args, char* argc[]) {
         // Atualizar frame
         Uint32 agora = SDL_GetTicks();
         if (agora - ultimoTempo >= FRAME_DELAY) {
-            frameAtual = (frameAtual + 1) % NUM_FRAMES;
             ultimoTempo = agora;
+
+            // Atualiza frame dependendo da direção
+            if (direcao == 1) {
+                frameAtual = (frameAtual + 1) % NUM_FRAMES; // 0 → 8
+            } else {
+                frameAtual = (frameAtual - 1 + NUM_FRAMES) % NUM_FRAMES; // 8 → 0
+            }
 
             // Movimento com troca de direção
             quadrado.x += direcao * SPEED;
