@@ -2,17 +2,18 @@
 #include <SDL2/SDL_image.h>
 #include <stdbool.h>
 
+#define NUM_FRAMES 9
+#define FRAME_DELAY 100 // ms por frame
+
 int AUX_WaitEventTimeout(SDL_Event *evt, Uint32 *ms) {
     if (ms == NULL) {
         return 0; // segurança
     }
 
-    Uint32 start = SDL_GetTicks(); // tempo inicial
-
-    int result = SDL_WaitEventTimeout(evt, *ms); // 1 = evento, 0 = timeout
-
-    Uint32 end = SDL_GetTicks(); // tempo final
-    Uint32 elapsed = end - start; // tempo decorrido
+    Uint32 start = SDL_GetTicks();
+    int result = SDL_WaitEventTimeout(evt, *ms);
+    Uint32 end = SDL_GetTicks();
+    Uint32 elapsed = end - start;
 
     if (elapsed >= *ms) {
         *ms = 0;
@@ -23,49 +24,70 @@ int AUX_WaitEventTimeout(SDL_Event *evt, Uint32 *ms) {
     return result; 
 }
 
-int main(int args, char* argc[]){
-
+int main(int args, char* argc[]) {
     bool rodando = true;
     int timeout = 16;
     SDL_Event evento;
 
-    // Iniciando elementos essenciais do SDL
     SDL_Init(SDL_INIT_EVERYTHING);
-    IMG_Init(0);
+    IMG_Init(IMG_INIT_PNG);
 
     SDL_Window* janela = SDL_CreateWindow(
-        "Exercicio-1.7",
+        "Animacao Sprite",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         800, 600,
         SDL_WINDOW_SHOWN
     );
     
-    SDL_Renderer* renderizador = SDL_CreateRenderer(janela, -1, 0);
+    SDL_Renderer* renderizador = SDL_CreateRenderer(janela, -1, SDL_RENDERER_ACCELERATED);
 
-    SDL_Texture* persona = IMG_LoadTexture(renderizador, "img/persona.png");
-
-    SDL_Rect quadrado = {50, 50, 300, 300};
-
-    while(rodando){
-
-        // Desenhando
-        SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
-        SDL_RenderClear(renderizador);
-        SDL_RenderCopy(renderizador, persona, NULL, &quadrado);
-        SDL_RenderPresent(renderizador);
-        
-        while(AUX_WaitEventTimeout(&evento, &timeout)){
-            if(evento.type == SDL_QUIT){
-                rodando = false;
-            }
+    // Carregar as 9 imagens
+    SDL_Texture* frames[NUM_FRAMES];
+    for (int i = 0; i < NUM_FRAMES; i++) {
+        char filename[64];
+        sprintf(filename, "img/anim_%d.png", i+1);
+        frames[i] = IMG_LoadTexture(renderizador, filename);
+        if (!frames[i]) {
+            printf("Erro ao carregar %s: %s\n", filename, IMG_GetError());
+            return -1;
         }
     }
 
-    // Liberando recursos
-    SDL_DestroyTexture(persona);
+    SDL_Rect quadrado = {50, 50, 300, 300};
+
+    int frameAtual = 0;
+    Uint32 ultimoTempo = SDL_GetTicks();
+
+    while (rodando) {
+        // Eventos
+        while (AUX_WaitEventTimeout(&evento, &timeout)) {
+            if (evento.type == SDL_QUIT) {
+                rodando = false;
+            }
+        }
+
+        // Atualizar frame
+        Uint32 agora = SDL_GetTicks();
+        if (agora - ultimoTempo >= FRAME_DELAY) {
+            frameAtual = (frameAtual + 1) % NUM_FRAMES;
+            ultimoTempo = agora;
+        }
+
+        // Desenhar
+        SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
+        SDL_RenderClear(renderizador);
+        SDL_RenderCopy(renderizador, frames[frameAtual], NULL, &quadrado);
+        SDL_RenderPresent(renderizador);
+    }
+
+    // Liberar recursos
+    for (int i = 0; i < NUM_FRAMES; i++) {
+        SDL_DestroyTexture(frames[i]);
+    }
     SDL_DestroyRenderer(renderizador);
     SDL_DestroyWindow(janela);
+    IMG_Quit();
     SDL_Quit();
     return 0;
 }
