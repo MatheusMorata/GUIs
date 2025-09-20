@@ -17,6 +17,24 @@ int main(int agrs, char* argc[]){
 
     SDL_Renderer *renderizador = SDL_CreateRenderer(janela, -1, 0); 
 
+    SDL_Texture *anim[10];
+    char caminho[64];
+    for (int i = 0; i < 10; i++) {
+        snprintf(caminho, sizeof(caminho), "img/anim%d.png", i);
+        SDL_Surface *surf = IMG_Load(caminho);
+        if (!surf) { printf("Erro ao carregar %s\n", caminho); return 1; }
+        anim[i] = SDL_CreateTextureFromSurface(renderizador, surf);
+        SDL_FreeSurface(surf);
+    }
+
+    SDL_Surface *sMun = IMG_Load("Municao.png");
+    SDL_Surface *sEsp = IMG_Load("Espada.png");
+    SDL_Texture *texMunicao = SDL_CreateTextureFromSurface(renderizador, sMun);
+    SDL_Texture *texEspada  = SDL_CreateTextureFromSurface(renderizador, sEsp);
+    SDL_FreeSurface(sMun);
+    SDL_FreeSurface(sEsp);
+
+
 
     // Liberando recursos
     SDL_DestroyRenderer(renderizador);
