@@ -37,6 +37,9 @@ int main(int agrs, char* argc[]){
 
 
     // Liberando recursos
+    for (int i = 0; i < 10; i++) SDL_DestroyTexture(anim[i]);
+    SDL_DestroyTexture(texMunicao);
+    SDL_DestroyTexture(texEspada);
     SDL_DestroyRenderer(renderizador);
     SDL_DestroyWindow(janela);
     IMG_Quit();
