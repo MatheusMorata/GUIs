@@ -22,14 +22,12 @@ int AUX_WaitEventTimeout(SDL_Event *evento, Uint32 *ms) {
 }
 
 int main(int agrs, char* argc[]) {
-    int i;
-
-    // Recursos essenciais
+    // Inicialização
     SDL_Init(SDL_INIT_EVERYTHING);
     IMG_Init(IMG_INIT_PNG);
 
     SDL_Window *janela = SDL_CreateWindow(
-        "Exercicio - 2.1",
+        "Exercicio - 2.1 (Detecção de Duplo Clique)",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         800, 600,
@@ -38,108 +36,32 @@ int main(int agrs, char* argc[]) {
 
     SDL_Renderer *renderizador = SDL_CreateRenderer(janela, -1, 0); 
 
-    SDL_Texture *animacao[10];
-    char caminho[64];
-    for (i = 0; i < 10; i++) {
-        SDL_Surface *superficie;
-        snprintf(caminho, sizeof(caminho), "img/anim%d.png", i);
-        superficie = IMG_Load(caminho);
-        if (!superficie) { 
-            printf("Erro ao carregar %s\n", caminho); 
-            return 1; 
-        }
-        animacao[i] = SDL_CreateTextureFromSurface(renderizador, superficie);
-        SDL_FreeSurface(superficie);
-    }
-
-    SDL_Surface *superficieMunicao = IMG_Load("Municao.png");
-    SDL_Surface *superficieEspada = IMG_Load("Espada.png");
-    SDL_Texture *texturaMunicao = SDL_CreateTextureFromSurface(renderizador, superficieMunicao);
-    SDL_Texture *texturaEspada  = SDL_CreateTextureFromSurface(renderizador, superficieEspada);
-    SDL_FreeSurface(superficieMunicao);
-    SDL_FreeSurface(superficieEspada);
-
-    bool rodando = true;
     SDL_Event evento;
-    int quadro = 0;
-    int modo = 0; 
-    int code = 0;
-    Uint32 tempoLimite = 0;
+    bool rodando = true;
+    Uint32 ultimoClique = 0;
+    int intervaloDuploClique = 300; 
 
-    Uint32 ultimoTempoQuadro = 0;
-    Uint32 atrasoQuadro = 100; 
-
-    SDL_Rect destino;
-    destino.x = 300;
-    destino.y = 200;
-    destino.w = 200;
-    destino.h = 200;
-
-    // LOOP PRINCIPAL
     while (rodando) {
-        Uint32 agora = SDL_GetTicks();
+        Uint32 timeout = 1000; 
+        if (AUX_WaitEventTimeout(&evento, &timeout)) {
+            switch (evento.type) {
+                case SDL_QUIT:
+                    rodando = false;
+                    break;
 
-        if (tempoLimite > 0) {
-            if (!AUX_WaitEventTimeout(&evento, &tempoLimite)) {
-                SDL_Event eventoUsuario;
-                eventoUsuario.type = SDL_USEREVENT;
-                eventoUsuario.user.code = code; 
-                SDL_PushEvent(&eventoUsuario);
-                code = 0;
-                continue;
-            }
-        } else {
-            SDL_PollEvent(&evento);
-        }
-
-        if (evento.type == SDL_QUIT) {
-            rodando = false;
-        }
-        else if (evento.type == SDL_MOUSEBUTTONDOWN && evento.button.button == SDL_BUTTON_LEFT) {
-            code++;
-            tempoLimite = 300; 
-        }
-        else if (evento.type == SDL_USEREVENT) {
-            if (evento.user.code == 2) {
-                modo = 2;
-                quadro = 0;
-                ultimoTempoQuadro = agora;
-            } else if (evento.user.code == 3) {
-                modo = 3;
-                quadro = 0;
-                ultimoTempoQuadro = agora;
+                case SDL_MOUSEBUTTONDOWN:
+                    if (evento.button.button == SDL_BUTTON_LEFT) {
+                        Uint32 agora = SDL_GetTicks();
+                        if (agora - ultimoClique <= (Uint32)intervaloDuploClique) {
+                            SDL_Log("Duplo clique detectado!");
+                        }
+                        ultimoClique = agora;
+                    }
+                    break;
             }
         }
-
-        SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
-        SDL_RenderClear(renderizador);
-
-        if (modo == 2 || modo == 3) {
-            if (quadro < 10) {
-                if (agora - ultimoTempoQuadro >= atrasoQuadro) {
-                    quadro++;
-                    ultimoTempoQuadro = agora;
-                }
-                SDL_RenderCopy(renderizador, animacao[quadro < 10 ? quadro : 9], NULL, &destino);
-            } else {
-                if (modo == 2)
-                    SDL_RenderCopy(renderizador, texturaMunicao, NULL, &destino);
-                else if (modo == 3)
-                    SDL_RenderCopy(renderizador, texturaEspada, NULL, &destino);
-            }
-        } else {
-            SDL_RenderCopy(renderizador, animacao[0], NULL, &destino);
-        }
-
-        SDL_RenderPresent(renderizador);
     }
 
-    // Liberando recursos 
-    for (i = 0; i < 10; i++) {
-        SDL_DestroyTexture(animacao[i]);
-    }
-    SDL_DestroyTexture(texturaMunicao);
-    SDL_DestroyTexture(texturaEspada);
     SDL_DestroyRenderer(renderizador);
     SDL_DestroyWindow(janela);
     IMG_Quit();
