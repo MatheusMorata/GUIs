@@ -4,43 +4,41 @@
 
 int AUX_WaitEventTimeout(SDL_Event *evento, Uint32 *ms) {
     if (ms == NULL) return 0;
-
     Uint32 inicio = SDL_GetTicks();
     int resultado = SDL_WaitEventTimeout(evento, *ms);
     Uint32 fim = SDL_GetTicks();
     Uint32 decorrido = fim - inicio;
-
-    if (decorrido >= *ms) {
-        *ms = 0;
-    } else {
-        *ms -= decorrido;
-    }
+    if (decorrido >= *ms) *ms = 0;
+    else *ms -= decorrido;
     return resultado; 
 }
 
 void executarAnimacao(SDL_Renderer *renderer, SDL_Texture **frames, int totalFrames, SDL_Rect *dest) {
     for (int i = 0; i < totalFrames; i++) {
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // fundo branco
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); 
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, frames[i], NULL, dest);
         SDL_RenderPresent(renderer);
+        SDL_Delay(50);
     }
 }
 
-void dispararMunicao(SDL_Renderer *renderer, SDL_Texture *municao, SDL_Texture *frameParado, SDL_Rect *destAnim, int larguraJanela, int alturaJanela) {
-    SDL_Rect bala;
-    bala.w = 40;   
-    bala.h = 20;   
-    bala.x = 450;
-    bala.y = 330;
+void disparar(SDL_Renderer *renderer, SDL_Texture *proj, SDL_Texture *frameParado, SDL_Rect *destAnim,
+              int larguraJanela, int alturaJanela, int w, int h) {
+    SDL_Rect objeto;
+    objeto.w = w;
+    objeto.h = h;
+    objeto.x = 450;
+    objeto.y = 330;
 
-    while (bala.x < larguraJanela) {
+    while (objeto.x < larguraJanela) {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, frameParado, NULL, destAnim);
-        SDL_RenderCopy(renderer, municao, NULL, &bala);
+        SDL_RenderCopy(renderer, proj, NULL, &objeto);
         SDL_RenderPresent(renderer);
-        bala.x += 1; 
+        objeto.x += 5; 
+        SDL_Delay(10);
     }
 }
 
@@ -72,8 +70,9 @@ int main(int agrs, char* argc[]) {
         }
     }
     SDL_Texture *municao = IMG_LoadTexture(renderizador, "img/Municao.png");
-    if (!municao) {
-        SDL_Log("Erro ao carregar Municao.png: %s", IMG_GetError());
+    SDL_Texture *espada  = IMG_LoadTexture(renderizador, "img/Espada.png");
+    if (!municao || !espada) {
+        SDL_Log("Erro ao carregar imagens de projéteis!");
         return -1;
     }
 
@@ -85,11 +84,15 @@ int main(int agrs, char* argc[]) {
 
     SDL_Event evento;
     bool rodando = true;
+
     Uint32 ultimoClique = 0;
-    int intervaloDuploClique = 300; 
+    int contadorCliques = 0;
+    int intervaloClique = 500;
+    bool acaoPendente = false;
 
     while (rodando) {
-        Uint32 timeout = 1000;
+        Uint32 timeout = 50;
+        Uint32 agora = SDL_GetTicks();
 
         SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 255);
         SDL_RenderClear(renderizador);
@@ -104,25 +107,34 @@ int main(int agrs, char* argc[]) {
 
                 case SDL_MOUSEBUTTONDOWN:
                     if (evento.button.button == SDL_BUTTON_LEFT) {
-                        Uint32 agora = SDL_GetTicks();
-                        if (agora - ultimoClique <= (Uint32)intervaloDuploClique) {
-                            SDL_Log("Duplo clique detectado!");
-                            executarAnimacao(renderizador, frames, 10, &dest);
-                            dispararMunicao(renderizador, municao, frames[0], &dest, larguraJanela, alturaJanela);
+                        if (agora - ultimoClique <= (Uint32)intervaloClique) {
+                            contadorCliques++;
+                        } else {
+                            contadorCliques = 1;
                         }
                         ultimoClique = agora;
+                        acaoPendente = true;
                     }
                     break;
             }
         }
+
+        if (acaoPendente && (agora - ultimoClique > (Uint32)intervaloClique)) {
+            if (contadorCliques == 2) {
+                executarAnimacao(renderizador, frames, 10, &dest);
+                disparar(renderizador, municao, frames[0], &dest, larguraJanela, alturaJanela, 40, 20);
+            } else if (contadorCliques == 3) {
+                executarAnimacao(renderizador, frames, 10, &dest);
+                disparar(renderizador, espada, frames[0], &dest, larguraJanela, alturaJanela, 60, 40);
+            }
+            contadorCliques = 0;
+            acaoPendente = false;
+        }
     }
 
-    // Liberar recursos
-    for (int i = 0; i < 10; i++) {
-        SDL_DestroyTexture(frames[i]);
-    }
+    for (int i = 0; i < 10; i++) SDL_DestroyTexture(frames[i]);
     SDL_DestroyTexture(municao);
-
+    SDL_DestroyTexture(espada);
     SDL_DestroyRenderer(renderizador);
     SDL_DestroyWindow(janela);
     IMG_Quit();
