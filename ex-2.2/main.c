@@ -26,6 +26,15 @@ int AUX_WaitEventTimeout(SDL_Event *evt, Uint32 *ms) {
     return result; 
 }
 
+void cliqueNoQuadrado(SDL_Rect quadrado){
+    int x, y;
+    SDL_GetMouseState(&x, &y);
+    SDL_Point p = {x, y};
+    if(SDL_PointInRect(&p, &quadrado)){
+        SDL_Log("Clicou no quadrado");
+    }
+}
+
 int main(int argc, char* argv[]){
 
     // Variáveis
@@ -56,12 +65,17 @@ int main(int argc, char* argv[]){
         SDL_RenderFillRect(renderizador, &quadrado);
         SDL_RenderPresent(renderizador);
 
+        // Eventos
         while(AUX_WaitEventTimeout(&evento, &timeout)){
-            if(evento.type == SDL_QUIT){
-                rodando = false;
+            switch(evento.type){
+                case SDL_QUIT:
+                    rodando = false;
+                case SDL_MOUSEBUTTONDOWN:
+                    if(evento.button.button == SDL_BUTTON_LEFT){
+                        cliqueNoQuadrado(quadrado);
+                    }
             }
         }
-
     }
 
     // Liberando recursos
