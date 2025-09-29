@@ -27,22 +27,19 @@ int AUX_WaitEventTimeout(SDL_Event *evt, Uint32 *ms) {
 }
 
 void cliqueNoQuadrado(SDL_Rect quadrado){
-    int x, y;
-    SDL_GetMouseState(&x, &y);
-    SDL_Point p = {x, y};
-    if(SDL_PointInRect(&p, &quadrado)){
-        SDL_Log("Clicou no quadrado");
-    }
+    SDL_Log("Clique no quadrado em (%d, %d)", quadrado.x, quadrado.y);
 }
 
 int main(int argc, char* argv[]){
 
-    // Variáveis
     bool rodando = true;
+    bool arrastando = false;
+    bool cliquePossivel = false;
+
+    int offsetX = 0, offsetY = 0;
     SDL_Event evento;
     Uint32 timeout = 200;
 
-    // Inicialização
     SDL_Init(SDL_INIT_EVERYTHING);
 
     SDL_Window *janela = SDL_CreateWindow(
@@ -56,29 +53,65 @@ int main(int argc, char* argv[]){
     SDL_Renderer *renderizador = SDL_CreateRenderer(janela, -1, 0);
 
     SDL_Rect quadrado = {400, 300, 50, 50};
+    SDL_Rect posicaoOriginal = quadrado;
 
-    // Desenhando
     while(rodando){
         SDL_SetRenderDrawColor(renderizador, 255, 255, 255, 0);
         SDL_RenderClear(renderizador);
+
         SDL_SetRenderDrawColor(renderizador, 0, 0, 255, 0);
         SDL_RenderFillRect(renderizador, &quadrado);
+
         SDL_RenderPresent(renderizador);
 
-        // Eventos
         while(AUX_WaitEventTimeout(&evento, &timeout)){
             switch(evento.type){
                 case SDL_QUIT:
                     rodando = false;
+                    break;
+
                 case SDL_MOUSEBUTTONDOWN:
                     if(evento.button.button == SDL_BUTTON_LEFT){
-                        cliqueNoQuadrado(quadrado);
+                        SDL_Point p = {evento.button.x, evento.button.y};
+                        if(SDL_PointInRect(&p, &quadrado)){
+                            arrastando = true;
+                            cliquePossivel = true;
+                            offsetX = p.x - quadrado.x;
+                            offsetY = p.y - quadrado.y;
+                        }
                     }
+                    break;
+
+                case SDL_MOUSEMOTION:
+                    if(arrastando){
+                        cliquePossivel = false; // se mexeu, não é clique
+                        quadrado.x = evento.motion.x - offsetX;
+                        quadrado.y = evento.motion.y - offsetY;
+                    }
+                    break;
+
+                case SDL_MOUSEBUTTONUP:
+                    if(evento.button.button == SDL_BUTTON_LEFT){
+                        if(cliquePossivel){
+                            cliqueNoQuadrado(quadrado);
+                        }
+                        arrastando = false;
+                        cliquePossivel = false;
+                    }
+                    break;
+
+                case SDL_KEYDOWN:
+                    if(evento.key.keysym.sym == SDLK_ESCAPE && arrastando){
+                        SDL_Log("Gesto cancelado, voltando à posição original.");
+                        quadrado = posicaoOriginal;
+                        arrastando = false;
+                        cliquePossivel = false;
+                    }
+                    break;
             }
         }
     }
 
-    // Liberando recursos
     SDL_DestroyRenderer(renderizador);
     SDL_DestroyWindow(janela);
     SDL_Quit();
