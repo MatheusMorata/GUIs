@@ -1,0 +1,3 @@
+# Exercício 2.2
+
+O código referente ao exercício 2.2 implementa, fazendo uso de máquina de estados, uma aplicação gráfica que exibe um quadrado azul na tela e permite sua interação através do mouse. O programa permite tanto clicar no quadrado (que registra sua posição no console) quanto arrastá-lo pela tela, com um sistema que diferencia entre clique e arraste baseado no movimento do mouse. Uma funcionalidade adicional permite cancelar um arraste em andamento pressionando a tecla ESC, fazendo o quadrado retornar à sua posição original. O loop principal gerencia eventos com timeout para atualização da interface, enquanto a função AUX_WaitEventTimeout controla o tempo de espera por eventos, ajustando dinamicamente o timeout restante.
